@@ -25,7 +25,7 @@ async function generateFiles(templateDir, targetDir) {
     // first ensure that the target dir exists
     fs.ensureDirSync(targetDir)
 
-    // if not then just create
+    // read all the files and folders in the template dir
     const entries = fs.readdirSync(templateDir, { withFileTypes: true })
 
     // now we have multiple folders in which there are multiple files that needs to be created
@@ -67,7 +67,15 @@ async function generateFiles(templateDir, targetDir) {
     }
 }
 
-generateFiles(templateRoot, projectRoot).then(() => {
-    console.log(`Feature "${featurePascal}" has been generated successfully.`);
-})
+async function main() {
+    try {
+        await generateFiles(templateRoot, projectRoot);
+        console.log(`✅ Feature "${featurePascal}" has been generated successfully.`);
+    } catch (err) {
+        console.error("❌ Failed to generate feature");
+        console.error(err.message);
+        process.exit(1);
+    }
+}
 
+main()
